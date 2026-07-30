@@ -1,0 +1,459 @@
+﻿<Window x:Class="Stolovayaa.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Вход" 
+        Height="550" 
+        Width="900"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResizeWithGrip"
+        MinHeight="500"
+        MinWidth="400"
+        Background="#E8F0FE">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid MinHeight="550" MinWidth="700">
+            <Grid Margin="30">
+                <Border Background="White" 
+                        CornerRadius="15" 
+                        Padding="30">
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <!-- ← звездочка! -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- ← переключатель -->
+                        </Grid.RowDefinitions>
+
+                        <!-- Заголовок -->
+                        <TextBlock Grid.Row="0" 
+                                   Text="🍽️ Школьная столовая" 
+                                   FontSize="26" 
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   Foreground="#2C3E50"
+                                   Margin="0,0,0,20"/>
+
+                        <!-- Режим (Вход/Регистрация) -->
+                        <TextBlock Grid.Row="1" 
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   HorizontalAlignment="Center"
+                                   Foreground="#7F8C8D"
+                                   Margin="0,0,0,15">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Text" Value="Вход"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsLoginMode}" Value="False">
+                                            <Setter Property="Text" Value="Регистрация"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <!-- Ошибка -->
+                        <TextBlock Grid.Row="2" 
+                                   Text="{Binding ErrorMessage}"
+                                   Foreground="#E74C3C"
+                                   FontSize="12"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,15">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ErrorMessage}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ErrorMessage}" Value="">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                        <Trigger Property="Text" Value="">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <!-- ВХОД -->
+                        <StackPanel Grid.Row="3">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsLoginMode}" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+
+                            <TextBlock Text="Логин" FontSize="12" FontWeight="SemiBold" 
+                                       Foreground="#34495E" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding Login}" 
+                                     Margin="0,0,0,12" 
+                                     Padding="10" 
+                                     Height="35"
+                                     BorderBrush="#D0D0D0"
+                                     BorderThickness="1">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="TextBox">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            CornerRadius="8">
+                                                        <ScrollViewer x:Name="PART_ContentHost" Margin="5,0"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsFocused" Value="True">
+                                                <Setter Property="BorderBrush" Value="#4A90D9"/>
+                                                <Setter Property="BorderThickness" Value="2"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+
+                            <TextBlock Text="Пароль" FontSize="12" FontWeight="SemiBold" 
+                                       Foreground="#34495E" Margin="0,0,0,5"/>
+                            <PasswordBox x:Name="PasswordBox" 
+                                         Margin="0,0,0,12" 
+                                         Padding="10" 
+                                         Height="35"
+                                         BorderBrush="#D0D0D0"
+                                         BorderThickness="1">
+                                <PasswordBox.Style>
+                                    <Style TargetType="PasswordBox">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="PasswordBox">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            CornerRadius="8">
+                                                        <ScrollViewer x:Name="PART_ContentHost" Margin="5,0"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsFocused" Value="True">
+                                                <Setter Property="BorderBrush" Value="#4A90D9"/>
+                                                <Setter Property="BorderThickness" Value="2"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </PasswordBox.Style>
+                            </PasswordBox>
+
+                            <Button Content="Войти" 
+                                    Command="{Binding LoginCommand}"
+                                    Background="#4A90D9" 
+                                    Foreground="White" 
+                                    Height="40" 
+                                    FontWeight="SemiBold"
+                                    FontSize="14"
+                                    Cursor="Hand"
+                                    BorderThickness="0">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" 
+                                                            CornerRadius="20">
+                                                        <ContentPresenter HorizontalAlignment="Center" 
+                                                                          VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#3A7BD5"/>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter Property="Background" Value="#2C6BB5"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+
+                        <!-- РЕГИСТРАЦИЯ -->
+                        <StackPanel Grid.Row="3">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsLoginMode}" Value="False">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+
+                            <TextBlock Text="Логин" FontSize="12" FontWeight="SemiBold" 
+                                       Foreground="#34495E" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding RegisterLogin}" 
+                                     Margin="0,0,0,10" 
+                                     Padding="10" 
+                                     Height="32"
+                                     BorderBrush="#D0D0D0"
+                                     BorderThickness="1">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="TextBox">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            CornerRadius="8">
+                                                        <ScrollViewer x:Name="PART_ContentHost" Margin="5,0"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsFocused" Value="True">
+                                                <Setter Property="BorderBrush" Value="#4A90D9"/>
+                                                <Setter Property="BorderThickness" Value="2"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+
+                            <TextBlock Text="Пароль" FontSize="12" FontWeight="SemiBold" 
+                                       Foreground="#34495E" Margin="0,0,0,5"/>
+                            <PasswordBox x:Name="RegisterPasswordBox" 
+                                         Margin="0,0,0,10" 
+                                         Padding="10" 
+                                         Height="32"
+                                         BorderBrush="#D0D0D0"
+                                         BorderThickness="1">
+                                <PasswordBox.Style>
+                                    <Style TargetType="PasswordBox">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="PasswordBox">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            CornerRadius="8">
+                                                        <ScrollViewer x:Name="PART_ContentHost" Margin="5,0"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsFocused" Value="True">
+                                                <Setter Property="BorderBrush" Value="#4A90D9"/>
+                                                <Setter Property="BorderThickness" Value="2"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </PasswordBox.Style>
+                            </PasswordBox>
+
+                            <TextBlock Text="Подтверждение" FontSize="12" FontWeight="SemiBold" 
+                                       Foreground="#34495E" Margin="0,0,0,5"/>
+                            <PasswordBox x:Name="RegisterConfirmPasswordBox" 
+                                         Margin="0,0,0,10" 
+                                         Padding="10" 
+                                         Height="32"
+                                         BorderBrush="#D0D0D0"
+                                         BorderThickness="1">
+                                <PasswordBox.Style>
+                                    <Style TargetType="PasswordBox">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="PasswordBox">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            CornerRadius="8">
+                                                        <ScrollViewer x:Name="PART_ContentHost" Margin="5,0"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsFocused" Value="True">
+                                                <Setter Property="BorderBrush" Value="#4A90D9"/>
+                                                <Setter Property="BorderThickness" Value="2"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </PasswordBox.Style>
+                            </PasswordBox>
+
+                            <TextBlock Text="Имя" FontSize="12" FontWeight="SemiBold" 
+                                       Foreground="#34495E" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding RegisterFirstName}" 
+                                     Margin="0,0,0,10" 
+                                     Padding="10" 
+                                     Height="32"
+                                     BorderBrush="#D0D0D0"
+                                     BorderThickness="1">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="TextBox">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            CornerRadius="8">
+                                                        <ScrollViewer x:Name="PART_ContentHost" Margin="5,0"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsFocused" Value="True">
+                                                <Setter Property="BorderBrush" Value="#4A90D9"/>
+                                                <Setter Property="BorderThickness" Value="2"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+
+                            <TextBlock Text="Фамилия" FontSize="12" FontWeight="SemiBold" 
+                                       Foreground="#34495E" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding RegisterLastName}" 
+                                     Margin="0,0,0,10" 
+                                     Padding="10" 
+                                     Height="32"
+                                     BorderBrush="#D0D0D0"
+                                     BorderThickness="1">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="TextBox">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            CornerRadius="8">
+                                                        <ScrollViewer x:Name="PART_ContentHost" Margin="5,0"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsFocused" Value="True">
+                                                <Setter Property="BorderBrush" Value="#4A90D9"/>
+                                                <Setter Property="BorderThickness" Value="2"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+
+                            <Button Content="Зарегистрироваться" 
+                                    Command="{Binding RegisterCommand}"
+                                    Background="#27AE60" 
+                                    Foreground="White" 
+                                    Height="40" 
+                                    FontWeight="SemiBold"
+                                    FontSize="14"
+                                    Cursor="Hand"
+                                    BorderThickness="0">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" 
+                                                            CornerRadius="20">
+                                                        <ContentPresenter HorizontalAlignment="Center" 
+                                                                          VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#219A52"/>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter Property="Background" Value="#1E8449"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+
+                        <!-- Переключатель режимов (теперь на Grid.Row="5") -->
+                        <StackPanel Grid.Row="5" 
+                                    Orientation="Horizontal" 
+                                    HorizontalAlignment="Center"
+                                    Margin="0,20,0,0">
+
+                            <TextBlock Foreground="#7F8C8D" FontSize="13">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="Нет аккаунта?"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsLoginMode}" Value="False">
+                                                <Setter Property="Text" Value="Уже есть аккаунт?"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                            <Button Command="{Binding SwitchModeCommand}"
+                                    Background="Transparent"
+                                    Foreground="#4A90D9"
+                                    FontWeight="Bold"
+                                    FontSize="13"
+                                    Cursor="Hand"
+                                    Margin="5,0,0,0"
+                                    BorderThickness="0">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Content" Value="Регистрация"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <ContentPresenter Content="{TemplateBinding Content}"/>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsLoginMode}" Value="False">
+                                                <Setter Property="Content" Value="Войти"/>
+                                            </DataTrigger>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Foreground" Value="#2C6BB5"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</Window>
