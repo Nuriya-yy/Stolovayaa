@@ -1,7 +1,8 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
+using Stolovayaa.Model;
+using Stolovayaa.Repositories;
+using Stolovayaa.Servise;
 using Stolovayaa.ViewModels;
-
 
 namespace Stolovayaa.Views
 {
@@ -13,11 +14,12 @@ namespace Stolovayaa.Views
         {
             InitializeComponent();
 
-            // Создаем ViewModel без authService для теста
-            _viewModel = new LoginViewModel(null);  // ← ПЕРЕДАЕМ null
+            var context = new Dining_roomEntities1();
+            var userRepo = new UserRepository(context);
+            var authService = new AuthService(userRepo);
+            _viewModel = new LoginViewModel(authService);
             DataContext = _viewModel;
 
-            // Привязка паролей
             PasswordBox.PasswordChanged += (s, e) =>
             {
                 _viewModel.Password = PasswordBox.Password;
@@ -34,7 +36,12 @@ namespace Stolovayaa.Views
             };
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
         {
 
         }

@@ -3,8 +3,10 @@ using System.Windows;
 using System.Windows.Input;
 using Stolovayaa.Commands;
 using Stolovayaa.DTOs;
+using Stolovayaa.Model;
+using Stolovayaa.Repositories;
 using Stolovayaa.Servise;
-using Stolovayaa.DTOs;
+using Stolovayaa.Views;
 
 namespace Stolovayaa.ViewModels
 {
@@ -21,7 +23,7 @@ namespace Stolovayaa.ViewModels
         private bool _isLoginMode = true;
         private string _errorMessage;
 
-        public LoginViewModel(IAuthService authService = null)  
+        public LoginViewModel(IAuthService authService = null)
         {
             _authService = authService;
 
@@ -100,8 +102,7 @@ namespace Stolovayaa.ViewModels
         {
             if (_authService == null)
             {
-                MessageBox.Show("Тестовый режим: Вход выполнен!", "Успех",
-                              MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Тестовый режим: Вход выполнен!", "Успех");
                 return;
             }
 
@@ -111,15 +112,39 @@ namespace Stolovayaa.ViewModels
                 var loginDto = new LoginDto { Login = Login, Password = Password };
                 var user = _authService.Login(loginDto);
 
-                Login = string.Empty;
-                Password = string.Empty;
+                MessageBox.Show($"Добро пожаловать, {user.FullName}!", "Успех");
 
-                MessageBox.Show($"Добро пожаловать, {user.FullName}!", "Успех",
-                              MessageBoxButton.OK, MessageBoxImage.Information);
+                if (user.RoleName == "Учитель")
+                {
+                    OpenOrderWindow();
+                }
+                else if (user.RoleName == "Работник")
+                {
+                    OpenKitchenWindow();
+                }
+                else if (user.RoleName == "Админ")
+                {
+                    OpenAdminWindow();
+                }
+                else
+                {
+                    MessageBox.Show($"Неизвестная роль: '{user.RoleName}'", "Ошибка");
+                    return;
+                }
+
+                foreach (Window w in Application.Current.Windows)
+                {
+                    if (w is LoginWindow)
+                    {
+                        w.Close();
+                        break;
+                    }
+                }
             }
             catch (Exception ex)
             {
                 ErrorMessage = ex.Message;
+                MessageBox.Show(ex.Message, "Ошибка");
             }
         }
 
@@ -134,7 +159,6 @@ namespace Stolovayaa.ViewModels
 
         private void ExecuteRegister()
         {
-            // Если сервис не передан - тестовый режим
             if (_authService == null)
             {
                 MessageBox.Show("Тестовый режим: Регистрация выполнена!", "Успех",
@@ -191,6 +215,33 @@ namespace Stolovayaa.ViewModels
                 Login = string.Empty;
                 Password = string.Empty;
             }
+        }
+
+        private void OpenOrderWindow()
+        {
+            var context = new Dining_roomEntities1();
+            var schoolboyRepo = new SchoolboyRepository(context);
+            var menuRepo = new DaylyMenuRepository(context);
+            var orderRepo = new OrderRepository(context);
+
+            var orderService = new OrderService(schoolboyRepo, menuRepo, orderRepo);
+            var vm = new OrderViewModel(orderService);
+
+            var window = new OrderWindow();
+            window.DataContext = vm;
+            window.Show();
+        }
+
+        private void OpenKitchenWindow()
+        {
+            var window = new KitchenWindow();
+            window.Show();
+        }
+
+        private void OpenAdminWindow()
+        {
+            var window = new AdminWindow();
+            window.Show();
         }
     }
 }

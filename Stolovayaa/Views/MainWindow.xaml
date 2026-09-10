@@ -42,7 +42,7 @@
                 </Border>
 
                 <Button x:Name="LogoutButton" Content="Выйти из системы"
-                        Background="#E74C3C"
+                        Background="#A69064"
                         Foreground="White"
                         FontSize="14"
                         FontWeight="SemiBold"
